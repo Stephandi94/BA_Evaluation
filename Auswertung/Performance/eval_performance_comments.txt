@@ -1,0 +1,26 @@
+Evaluation Performance - Comments
+
+1. Alle Sensoren:
+
+- der CARLA LiDAR ist um ungefähr das hundertfache schneller. Liegt an simpler Implementierung (keine Beam Divergence, die anderen haben 9 Mal mehr Rays) und Parallelisierung des Raycasts
+- Blickfeld und SCALA brauchen extem viel Zeit, [NOTE: liegt das an der Punktemenge?]
+- bei den beiden VLPs sieht man, dass mit doppelt so vielen Layern auch ungefähr doppelt so viel Zeit benötigt wird (VLP32 ist 2.074-fache Zeit). 
+- VLP16 ist tatsächlich der Schnellste unter den hinzugefügten Sensoren (liegt evtl. daran, dass er auch der am wenigsten komplexe ist)
+
+2. VLP16 Einfluss von Environmental Effects Strategie
+
+- da Fog und Rain die gleiche Pipeline durchlaufen und sich nur ein Scalar ändert, wird hier nur Rain aufgetragen
+- mit Regen wird die Berechnungszeit im Schnitt um 0.1 s erhöht pro Simulationsstep
+- bei Schnee sogar um 1.5 s, da in jeder Strategie und mit Aufruf des Modells jeweils noch die Funktion setSnow aufgerufen werden muss
+- sehe da aber keinen signifikanten Einfluss, kann auch stark durch hintergrundprozesse beeinflusst sein
+
+3. VLP32 mit Road Spray
+
+- hier ist die Berechnungsrate sogar um ca. 0.01 s besser als ohne Road Spray, was die Annahme stärkt, dass Hintergundprozesse in Unreal und auf dem PC stärkeren Einfluss haben
+
+
+Conclusion:
+
+Die höhere Komplexität des Sensormodells beeinflusst die Laufleistung des Simulators beträchtlich. Eine Simulation in Echtzeit bei einer über alle hinzugefügten Sensoren gemittelten Simulationsrate von 1.3 Simulationsschritten pro Sekunde ist nicht erreicht.
+ 
+

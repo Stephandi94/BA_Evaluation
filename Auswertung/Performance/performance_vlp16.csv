@@ -1,0 +1,4 @@
+Sensor,Mean Ex Time,Mean FPS
+VLP16,0.432,2.315
+VLP16_rain,0.536,1.866
+VLP16_snow,0.578,1.73
