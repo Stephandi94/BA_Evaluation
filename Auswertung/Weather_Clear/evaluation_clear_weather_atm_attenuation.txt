@@ -1,0 +1,9 @@
+Evaluation Atmospheric Attenuation at Clear Weather - Comments
+
+im Vergleich zur Ground Truth ist keine signifikante Veränderung zu erkennen. 
+Gleich viele Punkte.
+
+Das Modell macht hier eine weirde Sache.
+Mit attenuation factor, receiver aperture area, emitted signal strength und detection intensity wird eine attenuated power berechnet. 
+Diese bildet den mean für eine normalverteilung, aus der ein attenuated power noise wert gezogen wird. Ist dieser Wert größer als der signal strength threshold aus dem Sensorprofil,
+so wird die Intensität beeinflusst nach bekannter Formel. Ansonsten nicht. Scheint hier nicht besinders oft der Fall zu sein...

@@ -24,6 +24,17 @@ def get_intensity_info(pcl):
     return np.array([np.mean(pcl[:, 3]), np.min(pcl[:, 3]), np.max(pcl[:, 3])])
 
 
+def get_augmentation_info(gt, pcl):
+    """
+    determines augmentation of a point cloud wrt. GT
+    :param gt: (n, 4) np.array GT point cloud
+    :param pcl: (m, 4) np.array point cloud
+    :return: (1, 3) np.array ([similar points, lost points, added noise])
+    """
+    gt_indices, pcl_one_hot = get_differences_to_gt(gt, pcl)
+    num_lost = np.count_nonzero(gt_indices == -1)
+    return np.array([gt_indices.size - num_lost, num_lost, np.count_nonzero(pcl_one_hot == 0)])
+
 def get_distances(pcl):
     """
     computes the distance of the points to the origin
@@ -36,6 +47,18 @@ def get_distances(pcl):
         sys.stdout.flush()
         distances[i] = np.linalg.norm(pcl[i, :3])
     return distances
+
+def summarize_dataset_stats(data):
+    """
+    returns mean min and max over stats dataset
+    :param data: (n, 3) array with [mean, min, max] in each row
+    :return: (3, 3) stats array ([mean_mean, min_mean, max_mean], [mean_min, min_min, max_min], [mean_max, min_max, max_max])
+    """
+    return np.array([
+            [np.mean(data[:, 0]), np.min(data[:, 0]), np.max(data[:, 0])],  # mean values
+            [np.mean(data[:, 1]), np.min(data[:, 1]), np.max(data[:, 1])],  # min values
+            [np.mean(data[:, 2]), np.min(data[:, 2]), np.max(data[:, 2])],  # max values
+        ])
 
 
 def compare_intensities_equal_sized(index_array, gt, pcl):
@@ -216,14 +239,7 @@ class DatasetEvaluation:
         distance_stats_per_pcl = np.zeros((len(self.pcl_files), 3))
         for i, f in enumerate(self.pcl_files):
             distance_stats_per_pcl[i, :] = get_distance_info(pcl_to_numpy(f, self.pcl_cols))
-        return np.array([
-            [np.mean(distance_stats_per_pcl[:, 0]), np.min(distance_stats_per_pcl[:, 0]),
-             np.max(distance_stats_per_pcl[:, 0])],  # mean values
-            [np.mean(distance_stats_per_pcl[:, 1]), np.min(distance_stats_per_pcl[:, 1]),
-             np.max(distance_stats_per_pcl[:, 1])],  # min values
-            [np.mean(distance_stats_per_pcl[:, 2]), np.min(distance_stats_per_pcl[:, 2]),
-             np.max(distance_stats_per_pcl[:, 2])],  # max values
-        ]), distance_stats_per_pcl
+        return summarize_dataset_stats(distance_stats_per_pcl), distance_stats_per_pcl
 
     def analyze_distance_to_gt(self):
         """
@@ -239,14 +255,7 @@ class DatasetEvaluation:
         distance_stats_per_pcl = np.zeros((len(self.pcl_files), 3))
         for i, f in enumerate(self.pcl_files):
             distance_stats_per_pcl[i, :] = get_compare_distances_to_gt(self.gt, pcl_to_numpy(f, self.pcl_cols))
-        return np.array([
-            [np.mean(distance_stats_per_pcl[:, 0]), np.min(distance_stats_per_pcl[:, 0]),
-             np.max(distance_stats_per_pcl[:, 0])],  # mean values
-            [np.mean(distance_stats_per_pcl[:, 1]), np.min(distance_stats_per_pcl[:, 1]),
-             np.max(distance_stats_per_pcl[:, 1])],  # min values
-            [np.mean(distance_stats_per_pcl[:, 2]), np.min(distance_stats_per_pcl[:, 2]),
-             np.max(distance_stats_per_pcl[:, 2])],  # max values
-        ]), distance_stats_per_pcl
+        return summarize_dataset_stats(distance_stats_per_pcl), distance_stats_per_pcl
 
     def analyze_intensity(self):
         """
@@ -260,14 +269,7 @@ class DatasetEvaluation:
         intensity_stats_per_pcl = np.zeros((len(self.pcl_files), 3))
         for i, f in enumerate(self.pcl_files):
             intensity_stats_per_pcl[i, :] = get_intensity_info(pcl_to_numpy(f, self.pcl_cols))
-        return np.array([
-            [np.mean(intensity_stats_per_pcl[:, 0]), np.min(intensity_stats_per_pcl[:, 0]),
-             np.max(intensity_stats_per_pcl[:, 0])],  # mean values
-            [np.mean(intensity_stats_per_pcl[:, 1]), np.min(intensity_stats_per_pcl[:, 1]),
-             np.max(intensity_stats_per_pcl[:, 1])],  # min values
-            [np.mean(intensity_stats_per_pcl[:, 2]), np.min(intensity_stats_per_pcl[:, 2]),
-             np.max(intensity_stats_per_pcl[:, 2])],  # max values
-        ]), intensity_stats_per_pcl
+        return summarize_dataset_stats(intensity_stats_per_pcl), intensity_stats_per_pcl
 
     def analyze_intensity_to_gt(self):
         """
@@ -283,14 +285,7 @@ class DatasetEvaluation:
         intensity_stats_per_pcl = np.zeros((len(self.pcl_files), 3))
         for i, f in enumerate(self.pcl_files):
             intensity_stats_per_pcl[i, :] = get_compare_intensities_to_gt(self.gt, pcl_to_numpy(f, self.pcl_cols))
-        return np.array([
-            [np.mean(intensity_stats_per_pcl[:, 0]), np.min(intensity_stats_per_pcl[:, 0]),
-             np.max(intensity_stats_per_pcl[:, 0])],  # mean values
-            [np.mean(intensity_stats_per_pcl[:, 1]), np.min(intensity_stats_per_pcl[:, 1]),
-             np.max(intensity_stats_per_pcl[:, 1])],  # min values
-            [np.mean(intensity_stats_per_pcl[:, 2]), np.min(intensity_stats_per_pcl[:, 2]),
-             np.max(intensity_stats_per_pcl[:, 2])],  # max values
-        ]), intensity_stats_per_pcl
+        return summarize_dataset_stats(intensity_stats_per_pcl), intensity_stats_per_pcl
 
     def evaluate_augmentation(self):
         """
@@ -309,11 +304,7 @@ class DatasetEvaluation:
             gt_indices, pcl_one_hot = get_differences_to_gt(self.gt, pcl_to_numpy(f, self.pcl_cols))
             num_lost = np.count_nonzero(gt_indices == -1)
             augmentation[i, :] = np.array([gt_indices.size - num_lost, num_lost, np.count_nonzero(pcl_one_hot == 0)])
-        return np.array([
-            [np.mean(augmentation[:, 0]), np.min(augmentation[:, 0]), np.max(augmentation[:, 0])],  # similar points
-            [np.mean(augmentation[:, 1]), np.min(augmentation[:, 1]), np.max(augmentation[:, 1])],  # lost points values
-            [np.mean(augmentation[:, 2]), np.min(augmentation[:, 2]), np.max(augmentation[:, 2])],  # added noise
-        ]), augmentation
+        return summarize_dataset_stats(augmentation), augmentation
 
     def accumulate_distances(self):
         """
@@ -339,7 +330,7 @@ class DatasetEvaluation:
             intensities_in_dataset = np.concatenate((intensities_in_dataset, pcl_to_numpy(f, self.pcl_cols)[:, 3]))
         return intensities_in_dataset
 
-    # TODO add more
+
 
 
 class SeriesEvaluation:

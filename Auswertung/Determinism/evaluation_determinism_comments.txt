@@ -1,0 +1,7 @@
+Evaluation Determinism - Comments
+
+Wenn ein Sensor in einer statischen Scene an der Selben Stelle gespawn wird und im Modell Noise und Umgebungseffekte deaktiviert sind, so zeigt sich, dass jeder Frame dem andern gleicht.
+Hier gezeigt über Aufzeichnungen des VLP16 und VLP32 jeweils über 120 Frames.
+
+Damit haben wir eine Basis zur Evaluation der weiteren Messungen. Eine einzelne Pointcloud gemessen in einer statischen Scene mit deaktivierter Noise und Umgebungseffekten bezeichnen wir ab Sofort als GT.
+  

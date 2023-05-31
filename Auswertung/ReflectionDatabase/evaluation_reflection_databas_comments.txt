@@ -1,0 +1,15 @@
+Evaluation Reflection Database - Comments
+
+Anzahl an Detektionen hat sich nicht geändert, lediglich Intensitäten sind verändert.
+
+Betrachtet man den Plot, sieht man direkt einen Einfluss der Reflektionsdaten. Im Mittel liegen die Intensitäten nun bei 74.8%. In der GT war dieser Wert bei 85.3%. 
+Auch der Minimal- und Maximalwert hat sich verschoben. Min von 61.3 % -> 61.1%; Max von 99.9% -> 92.4%. Im Durchschnitt weicht der Reflektionswert um -10.5% von dem korrespondierenden GT Wert ab.
+
+Man kann damit sagen, die Reflektionsdatenbank hat einen Einfluss. Allerdings lässt sich nichts über den Realitätsgrad sagen, da die Werte nicht unter 60% fallen. 
+Das liegt an der Implementierung der Berechnung der finalen Intensität, die einen Detektionsthreshold mit einbezieht, welcher beim VLP32 -70 dBm beträgt. 
+
+Angenommen man berechnet die finale Intensität eines Rays, welcher auf eine Obefläche im 45° Winkel auftrifft mit Reflektivität 0.5 des Materials, so wäre dies beim VLP32 12.505 dBm, also 27% Intensität.
+Durch die dazurechnung des Thresholds verschiebt sich das Verhältnis aber und die Intensität steigt auf 71%.
+
+Im zweiten Plot wurde der Threshold rausgerechnet, was eine deutlich breitere Verteilung zeigt. Mit 35.6% ist der Intensitätsmittelwert noch zu hoch, aber deutlich näher an der von [REF] genannten 20% Durchschnittsreflektivität.
+Dies kommt vor allem durch die vielen Zufallswerte. --> Ausführen

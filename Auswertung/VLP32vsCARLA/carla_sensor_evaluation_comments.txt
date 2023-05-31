@@ -1,0 +1,21 @@
+CARLA Sensor Evaluation Comments
+
+Wurde mit [NOTE: Nochmal nachschauen] 1151000 Punkten pro Sekunde konfiguriert (/20 ~58000, weil VLP32 in Frames Arbeitet).
+FoV Vertikal von [-25°, 15°]. 
+
+Qualitativer Vergleich:
+TODO
+
+
+Vergleich ohne Noise:
+VLP32 hat genau 54846 Punkte pro PCL. CARLA mit 55086 (mehr, da Punkteanzahl pro Sekunde eigentlich angegeben wird)
+Bei VLP32 liegt max Distanz bei 100.92 m, bei Carla bei 99.99 m. Unterschiedliche Distanzberechnung?
+TODO Mehr?
+
+
+Vergleich mit Noise:
+Bei beiden Sensoren konnte man noise stdev 0.005 aus einer Normalverteilung (mu = 0) setzen. 
+Bei CARLA scheint der Einfluss sehr gering. Faktor könnte aber erhöht werden.
+Carla und VLP32 verschieben den Punkt auf dem Ray. Nur bei VLP32 wird die Distanz noch durch die Distanzauflösung angepasst.
+
+
