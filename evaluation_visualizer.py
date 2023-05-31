@@ -260,8 +260,9 @@ class VisEval:
         self.linestyle = '-'
         self.xlim = None
         self.ylim = None
-        self.fontsize = 13
-        self.labelsize = 11
+        self.fontsize = 14
+        self.labelsize = 12
+        self.legend_col = 1
 
     def set_x_label(self, x_label):
         self.x_label = x_label
@@ -298,6 +299,9 @@ class VisEval:
 
     def set_legend_frame(self, boolean):
         self.legend_frame = boolean
+
+    def set_legend_col(self, n_col):
+        self.legend_col = n_col
 
     def to_file(self, path, filename):
         """
@@ -383,6 +387,8 @@ class VisEval:
                 plt.plot(x_outliers, y_outliers, outlier_style, label=outlier_label)
             plt.xlabel(self.x_label, fontsize=self.fontsize)
             plt.ylabel(self.y_label, fontsize=self.fontsize)
+            plt.xticks(fontsize=self.labelsize)
+            plt.yticks(fontsize=self.labelsize)
             if self.show_legend:
                 plt.legend(loc=self.legend_location, frameon=self.legend_frame, fontsize=self.fontsize)
             if self.file_destination is None or len(self.y_data) > 1:
@@ -410,6 +416,8 @@ class VisEval:
                      alpha=1 / len(self.y_data))
         plt.xlabel(self.x_label, fontsize=self.fontsize)
         plt.ylabel(self.y_label, fontsize=self.fontsize)
+        plt.xticks(fontsize=self.labelsize)
+        plt.yticks(fontsize=self.labelsize)
         if self.show_legend:
             plt.legend(loc=self.legend_location, frameon=self.legend_frame, fontsize=self.fontsize)
         if self.xlim is not None:
@@ -428,9 +436,11 @@ class VisEval:
             plt.plot(self.x_data[0], d, label=self.data_labels[i], color=self.colors[i], marker=self.marker, linestyle=self.linestyle) #TODO irgendwann x_data pro y_data möglich machen
         plt.xlabel(self.x_label, fontsize=self.fontsize)
         plt.ylabel(self.y_label, fontsize=self.fontsize)
-        plt.legend(loc=self.legend_location, frameon=self.legend_frame, fontsize=self.fontsize)
+        plt.legend(loc=self.legend_location, ncol=self.legend_col, frameon=self.legend_frame, fontsize=self.fontsize)
+        plt.xticks(fontsize=self.labelsize)
+        plt.yticks(fontsize=self.labelsize)
         if self.x_tick_label is not None:
-            plt.xticks(self.x_data[0], self.x_tick_label)
+            plt.xticks(self.x_data[0], self.x_tick_label, fontsize=self.labelsize)
         if self.file_destination is None:
             plt.show()
         else:
@@ -446,6 +456,7 @@ class VisEval:
         ax1.set_xlabel(self.x_label, fontsize=self.fontsize)
         ax1.set_ylabel(self.y_label[0], fontsize=self.fontsize)
         ax1.legend(loc=self.legend_location[0], frameon=self.legend_frame, fontsize=self.fontsize)
+        ax1.tick_params(labelsize=self.labelsize)
         if self.ylim is not None:
             ax1.set_ylim(self.ylim[0])
 
@@ -457,11 +468,12 @@ class VisEval:
                  linestyle=self.linestyle[3], alpha=0.7)
         ax2.set_ylabel(self.y_label[1], fontsize=self.fontsize)
         ax2.legend(loc=self.legend_location[1], frameon=self.legend_frame, fontsize=self.fontsize)
+        ax2.tick_params(labelsize=self.labelsize)
         if self.ylim is not None:
             ax2.set_ylim(self.ylim[1])
 
         if self.x_tick_label is not None:
-            plt.xticks(self.x_data[0], self.x_tick_label)
+            plt.xticks(self.x_data[0], self.x_tick_label, fontsize=self.labelsize)
         if self.file_destination is None:
             plt.show()
         else:
@@ -479,6 +491,10 @@ class VisEval:
         # plt.title(title)
         plt.xlabel(self.x_label, fontsize=self.fontsize)
         plt.ylabel(self.y_label, fontsize=self.fontsize)
+        plt.xticks(fontsize=self.labelsize)
+        plt.yticks(fontsize=self.labelsize)
+        if self.xlim is not None:
+            plt.xlim(self.xlim)
         if self.ylim is not None:
             plt.ylim(self.ylim)
         if self.legend_outside:
@@ -486,7 +502,7 @@ class VisEval:
         else:
             plt.legend(loc=self.legend_location, frameon=self.legend_frame, fontsize=self.fontsize)
         if self.x_tick_label is not None:
-            plt.xticks(self.x_data, self.x_tick_label)
+            plt.xticks(self.x_data, self.x_tick_label, fontsize=self.labelsize)
         if self.file_destination is None:
             plt.show()
         else:
@@ -505,12 +521,15 @@ class VisEval:
                 ax.plot(x_data, np.ones_like(x_data) * mean, label="{} mean".format(self.data_labels[i]), color=self.colors[i], linestyle='--')
         plt.xlabel(self.x_label, fontsize=self.fontsize)
         plt.ylabel(self.y_label, fontsize=self.fontsize)
+        plt.xticks(fontsize=self.labelsize)
+        plt.yticks(fontsize=self.labelsize)
+        ax.tick_params(labelsize=self.labelsize)
         step_size = x_data[-1] - x_data[-2]
         plt.xlim([x_data[0], x_data[-1] + 2 * step_size])
         if self.legend_outside:
-            plt.legend(bbox_to_anchor=(1.02, 1), borderaxespad=0, frameon=self.legend_frame, fontsize=self.fontsize)
+            plt.legend(bbox_to_anchor=self.legend_location, borderaxespad=0, frameon=self.legend_frame, fontsize=self.fontsize)
         else:
-            plt.legend(loc=self.legend_location, frameon=self.legend_frame, fontsize=self.fontsize)
+            plt.legend(loc=self.legend_location, ncol=self.legend_col, frameon=self.legend_frame, fontsize=self.fontsize)
         if self.x_tick_label is not None:
             ax.set_xticks(self.x_data[0], self.x_tick_label)
         if self.y_tick_label is not None:
@@ -533,9 +552,11 @@ class VisEval:
             plt.plot(self.x_data[0], d, color=self.colors[i], linestyle='none', marker='o', label=self.data_labels[i])
         plt.xlabel(self.x_label, fontsize=self.fontsize)
         plt.ylabel(self.y_label, fontsize=self.fontsize)
+        plt.xticks(fontsize=self.labelsize)
+        plt.yticks(fontsize=self.labelsize)
         plt.legend(loc=self.legend_location, frameon=self.legend_frame, fontsize=self.fontsize)
         if self.x_tick_label is not None:
-            plt.xticks(self.x_data[0], self.x_tick_label)
+            plt.xticks(self.x_data[0], self.x_tick_label, fontsize=self.labelsize)
         if self.file_destination is None:
             plt.show()
         else:

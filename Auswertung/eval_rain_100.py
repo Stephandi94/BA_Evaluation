@@ -59,6 +59,7 @@ def main():
     intensity_vis.define_bins(100, 0, 1)
     intensity_vis.set_legend_location('upper left')
     intensity_vis.to_file(dest_path, "rain_intensities")
+    intensity_vis.set_xlim([0, 1.05])
     intensity_vis.histogram_comparison()
 
     # plot augmentation
@@ -69,9 +70,11 @@ def main():
     aug_vis.set_y_label("# points")
     aug_vis.set_data_labels(["lost points", "noise"])
     aug_vis.set_y_ticklabel(np.arange(
-        (np.max(augmentation_stats_per_pcl[:, 2]) + 0.25) * -1,
-        np.max(augmentation_stats_per_pcl[:, 1]) + 0.5, 0.25
+        (np.max(augmentation_stats_per_pcl[:, 2]) + 52) * -1,
+        np.max(augmentation_stats_per_pcl[:, 1]) + 100, 100
     ))
+    aug_vis.set_legend_location('center right')
+    aug_vis.set_legend_frame(True)
     aug_vis.to_file(dest_path, "rain_augmenatation")
     aug_vis.bar_plot(True, True)
 
@@ -104,8 +107,9 @@ def main():
     phys_int.set_y_label("frequency")
     phys_int.set_data_labels(["150.0 mm/h rain", "no rain"])  # TODO REGENRATE ANPASSEN
     phys_int.define_bins(100, 0, 1)
-    phys_int.set_legend_location('upper left')
+    phys_int.set_legend_location('upper right')
     phys_int.to_file(dest_path, "phys_rain_intensities")
+    phys_int.set_xlim([0, 1.05])
     phys_int.histogram_comparison()
 
     # plot physical distances
@@ -115,8 +119,9 @@ def main():
     phys_int.set_y_label("frequency")
     phys_int.set_data_labels(["150.0 mm/h rain", "no rain"])  # TODO REGENRATE ANPASSEN
     phys_int.define_bins(int(np.max(phys_distance_gt)), 0, int(np.max(phys_distance_gt)))
-    phys_int.set_legend_location('upper left')
+    phys_int.set_legend_location('upper right')
     phys_int.to_file(dest_path, "phys_rain_distances")
+    phys_int.set_xlim([0, 102])
     phys_int.histogram_comparison()
 
 if __name__=='__main__':

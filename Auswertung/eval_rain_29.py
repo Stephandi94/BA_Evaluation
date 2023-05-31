@@ -70,9 +70,11 @@ def main():
     aug_vis.set_y_label("# points")
     aug_vis.set_data_labels(["lost points", "noise"])
     aug_vis.set_y_ticklabel(np.arange(
-        (np.max(augmentation_stats_per_pcl[:, 2]) + 0.25) * -1,
-        np.max(augmentation_stats_per_pcl[:, 1]) + 0.5, 0.25
+        (np.max(augmentation_stats_per_pcl[:, 2]) + 0.5) * -1,
+        np.max(augmentation_stats_per_pcl[:, 1]) + 1, 0.5
     ))
+    #aug_vis.set_legend_location((0.7, 0.68))
+    aug_vis.set_legend_col(2)
     aug_vis.to_file(dest_path, "rain_augmenatation")
     aug_vis.bar_plot(True, True)
 

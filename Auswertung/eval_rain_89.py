@@ -59,6 +59,7 @@ def main():
     intensity_vis.define_bins(100, 0, 1)
     intensity_vis.set_legend_location('upper left')
     intensity_vis.to_file(dest_path, "rain_intensities")
+    intensity_vis.set_xlim([0, 1.05])
     intensity_vis.histogram_comparison()
 
     # plot augmentation
@@ -70,9 +71,10 @@ def main():
     aug_vis.set_data_labels(["lost points", "noise"])
     aug_vis.set_y_ticklabel(np.arange(
         (np.max(augmentation_stats_per_pcl[:, 2]) + 8) * -1,
-        np.max(augmentation_stats_per_pcl[:, 1]) + 10, 10
+        np.max(augmentation_stats_per_pcl[:, 1]) + 40, 10
     ))
-    aug_vis.set_legend_outside(True)
+    aug_vis.set_legend_col(2)
+    #aug_vis.set_legend_outside(True)
     aug_vis.to_file(dest_path, "rain_augmenatation")
     aug_vis.bar_plot(True, True)
 
@@ -80,45 +82,47 @@ def main():
     src_phys_rain = os.path.join(r"..\Datasets\BA_AdverseWeather\data\VLP16_rain_91.5.bin") # TODO REGENRATE ANPASSEN
     src_phys_gt = os.path.join(r"..\Datasets\BA_AdverseWeather\data\VLP16_clear_no-noise.bin")
 
-    # phys_rain = et.pcl_to_numpy(src_phys_rain)
-    # phys_gt = et.pcl_to_numpy(src_phys_gt)
-    # print("points physical GT: {}\npoints physical rain: {}".format(phys_gt.shape[0], phys_rain.shape[0]))
-    #
-    # phys_distance_stats = et.get_distance_info(phys_rain)
-    # phys_intensity_stats = et.get_intensity_info(phys_rain)
-    # phys_distance_stats_gt = et.get_compare_distances_to_gt(phys_gt, phys_rain)
-    # phys_intensity_stats_gt = et.get_compare_intensities_to_gt(phys_gt, phys_rain)
-    # phys_augmentation = et.get_augmentation_info(phys_gt, phys_rain)
-    # phys_distance_gt = et.get_distances(phys_gt)
-    # phys_distance = et.get_distances(phys_rain)
-    #
-    # ed.stats_1x3_to_csv(phys_distance_stats, dest_path, "rain_distance_stats_physical_{}".format(sub_dir))
-    # ed.stats_1x3_to_csv(phys_intensity_stats, dest_path, "rain_intensity_stats_physical_{}".format(sub_dir))
-    # ed.stats_1x3_to_csv(phys_distance_stats_gt, dest_path, "rain_distance_stats_GT_physical_{}".format(sub_dir))
-    # ed.stats_1x3_to_csv(phys_intensity_stats_gt, dest_path, "rain_intensity_stats_GT_physical_{}".format(sub_dir))
-    # ed.stats_1x3_to_csv(phys_augmentation, dest_path, "rain_augmentation_stats_physical_{}".format(sub_dir), ["similar", "lost", "noise"])
-    #
-    # # plot physical intensities
-    # phys_int = ev.VisEval()
-    # phys_int.set_y_data([phys_rain[:, 3], phys_gt[:, 3]])
-    # phys_int.set_x_label("intensity")
-    # phys_int.set_y_label("frequency")
-    # phys_int.set_data_labels(["91.5 mm/h rain", "no rain"])  # TODO REGENRATE ANPASSEN
-    # phys_int.define_bins(100, 0, 1)
-    # phys_int.set_legend_location('upper left')
-    # phys_int.to_file(dest_path, "phys_rain_intensities")
-    # phys_int.histogram_comparison()
-    #
-    # # plot physical distances
-    # phys_int = ev.VisEval()
-    # phys_int.set_y_data([phys_distance, phys_distance_gt])
-    # phys_int.set_x_label("distance [m]")
-    # phys_int.set_y_label("frequency")
-    # phys_int.set_data_labels(["91.5 mm/h rain", "no rain"])  # TODO REGENRATE ANPASSEN
-    # phys_int.define_bins(int(np.max(phys_distance_gt)), 0, int(np.max(phys_distance_gt)))
-    # phys_int.set_legend_location('upper left')
-    # phys_int.to_file(dest_path, "phys_rain_distances")
-    # phys_int.histogram_comparison()
+    phys_rain = et.pcl_to_numpy(src_phys_rain)
+    phys_gt = et.pcl_to_numpy(src_phys_gt)
+    print("points physical GT: {}\npoints physical rain: {}".format(phys_gt.shape[0], phys_rain.shape[0]))
+
+    phys_distance_stats = et.get_distance_info(phys_rain)
+    phys_intensity_stats = et.get_intensity_info(phys_rain)
+    phys_distance_stats_gt = et.get_compare_distances_to_gt(phys_gt, phys_rain)
+    phys_intensity_stats_gt = et.get_compare_intensities_to_gt(phys_gt, phys_rain)
+    phys_augmentation = et.get_augmentation_info(phys_gt, phys_rain)
+    phys_distance_gt = et.get_distances(phys_gt)
+    phys_distance = et.get_distances(phys_rain)
+
+    ed.stats_1x3_to_csv(phys_distance_stats, dest_path, "rain_distance_stats_physical_{}".format(sub_dir))
+    ed.stats_1x3_to_csv(phys_intensity_stats, dest_path, "rain_intensity_stats_physical_{}".format(sub_dir))
+    ed.stats_1x3_to_csv(phys_distance_stats_gt, dest_path, "rain_distance_stats_GT_physical_{}".format(sub_dir))
+    ed.stats_1x3_to_csv(phys_intensity_stats_gt, dest_path, "rain_intensity_stats_GT_physical_{}".format(sub_dir))
+    ed.stats_1x3_to_csv(phys_augmentation, dest_path, "rain_augmentation_stats_physical_{}".format(sub_dir), ["similar", "lost", "noise"])
+
+    # plot physical intensities
+    phys_int = ev.VisEval()
+    phys_int.set_y_data([phys_rain[:, 3], phys_gt[:, 3]])
+    phys_int.set_x_label("intensity")
+    phys_int.set_y_label("frequency")
+    phys_int.set_data_labels(["91.5 mm/h rain", "no rain"])  # TODO REGENRATE ANPASSEN
+    phys_int.define_bins(100, 0, 1)
+    phys_int.set_legend_location('upper right')
+    phys_int.to_file(dest_path, "phys_rain_intensities")
+    phys_int.set_xlim([0, 1.05])
+    phys_int.histogram_comparison()
+
+    # plot physical distances
+    phys_int = ev.VisEval()
+    phys_int.set_y_data([phys_distance, phys_distance_gt])
+    phys_int.set_x_label("distance [m]")
+    phys_int.set_y_label("frequency")
+    phys_int.set_data_labels(["91.5 mm/h rain", "no rain"])  # TODO REGENRATE ANPASSEN
+    phys_int.define_bins(int(np.max(phys_distance_gt)), 0, int(np.max(phys_distance_gt)))
+    phys_int.set_legend_location('upper right')
+    phys_int.to_file(dest_path, "phys_rain_distances")
+    phys_int.set_xlim([0, 102])
+    phys_int.histogram_comparison()
 
 if __name__=='__main__':
     main()
