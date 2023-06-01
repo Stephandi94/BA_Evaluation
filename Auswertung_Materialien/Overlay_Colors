@@ -1,0 +1,8 @@
+Overlay Color Code
+
+SENSOR		COLOR		COLOR CODE
+Blickfeld	blue		(0, 0, 0.5)
+IbeoLUX	light blue	(0, 0.5039, 1)
+Scala		light green	(0.49, 1, 0.47)
+VLP16		orange		(1, 0.58, 0)
+VLP32		red		(0.5, 0, 0)
