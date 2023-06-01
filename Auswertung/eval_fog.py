@@ -45,10 +45,11 @@ def main():
     vis_aug_c.set_x_label("meteorological visibility [m]")
     vis_aug_c.set_y_label(["# points by FZD Model", "# points by Physical Model"])
     vis_aug_c.set_data_labels(["lost points [FZD Model]", "added noise [FZD Model]", "lost points [Phys. Model]", "added noise [Phys. Model]"])
-    vis_aug_c.set_legend_location([(0.02, 0.85), (0.02, 0.7)])
+    vis_aug_c.set_legend_location([(0.02, 0.83), (0.02, 0.675)])
     vis_aug_c.to_file(os.path.join(r"Weather_Fog"), r"fog_augmentation_comparison_physical") #TODO
     vis_aug_c.set_colors(['#1f77b4', '#ff7f0e', '#1f77b4', '#ff7f0e'])
     vis_aug_c.set_linestyle(['-', '-', '--', '--'])
+    vis_aug_c.set_ylim([[-500, 26000], [-500, 26000]])
     vis_aug_c.line_plot_two_y_axis()
 
     # get max detection distance and intensity mean
@@ -89,7 +90,7 @@ def main():
                                "mean detection intensity [Phys. Model]"])
     vis_att_c.set_legend_location([(0.02, 0.2), (0.02, 0.05)])
     vis_att_c.to_file(os.path.join(r"Weather_Fog"), r"fog_attenuation_comparison_physical") #TODO
-    vis_att_c.set_ylim([[95, 105], [0.4, 1]])
+    vis_att_c.set_ylim([[0, 105], [0, 1]])
     vis_att_c.line_plot_two_y_axis()
 
     # just intensities
@@ -99,8 +100,11 @@ def main():
     vis_int.set_data_labels(["mean", "min", "max"])
     vis_int.set_x_label("meteorological visibility [m]")
     vis_int.set_y_label("intensity")
+    vis_int.set_x_ticklabel(tick_labels)
     vis_int.set_legend_frame(True)
-    vis_int.set_legend_location((0.875, 0.1))
+    vis_int.set_legend_location('upper right')
+    vis_int.set_marker('.')
+    vis_int.set_xlim([-0.1, len(tick_labels) - 0.9])
     vis_int.to_file(os.path.join(r"Weather_Fog"), r"fog_intensities_comparison") #TODO
     vis_int.plot_stats()
 
@@ -112,7 +116,10 @@ def main():
     vis_dist.set_x_label("meteorological visibility [m]")
     vis_dist.set_y_label("detection distance [m]")
     vis_dist.set_legend_frame(True)
-    vis_dist.set_legend_location('center right')
+    vis_dist.set_marker('.')
+    vis_dist.set_xlim([-0.1, len(tick_labels) - 0.9])
+    vis_dist.set_legend_location('upper right')
+    vis_dist.set_x_ticklabel(tick_labels)
     vis_dist.to_file(os.path.join(r"Weather_Fog"), r"fog_distances_comparison") #TODO
     vis_dist.plot_stats()
 

@@ -58,17 +58,40 @@ def main():
     stats_to_csv(carla_num_point_stats, carla_distance_stats, carla_intensity_stats, "determinism_carla")
 
     # plot point distribution over frames
-    ev.line_plot(
-        np.arange(0, vlp16_num_points.size),
-        [vlp16_num_points, vlp32_num_points, carla_num_points],
-        ["VLP16", "VLP32", "CARLA"],
-        "Number of Detected Points in Static Scene",
-        "frame number",
-        "# points",
-        os.path.join(dest, "determinism_points"),
-        'center right'
-    )
+    # ev.line_plot(
+    #     np.arange(0, vlp16_num_points.size),
+    #     [vlp16_num_points, vlp32_num_points, carla_num_points],
+    #     ["VLP16", "VLP32", "CARLA"],
+    #     "Number of Detected Points in Static Scene",
+    #     "frame number",
+    #     "# points",
+    #     os.path.join(dest, "determinism_points"),
+    #     'center right'
+    # )
 
+    vis = ev.VisEval()
+    vis.set_x_data([np.arange(0, vlp16_num_points.size)])
+    vis.set_y_data([vlp16_num_points, vlp32_num_points, carla_num_points])
+    vis.set_data_labels(["VLP16", "VLP32", "CARLA"])
+    vis.set_x_label("frame number")
+    vis.set_y_label("# points")
+    vis.to_file(dest, "determinism_points")
+    vis.set_legend_location('lower right')
+    vis.set_xlim([0, vlp16_num_points.size])
+    vis.set_ylim([0, np.max(carla_num_points) + 1000])
+    vis.line_plot()
+
+    vis = ev.VisEval()
+    vis.set_x_data([np.arange(0, vlp16_num_points.size)])
+    vis.set_y_data([vlp16_num_points, vlp32_num_points])
+    vis.set_data_labels(["VLP16", "VLP32"])
+    vis.set_x_label("frame number")
+    vis.set_y_label("# points")
+    vis.to_file(dest, "determinism_points_vlp")
+    vis.set_legend_location('lower right')
+    vis.set_xlim([0, vlp16_num_points.size])
+    vis.set_ylim([0, np.max(vlp32_num_points) + 1000])
+    vis.line_plot()
 
 if __name__ == '__main__':
     main()

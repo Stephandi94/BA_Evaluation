@@ -22,8 +22,24 @@ def plot_performance(files, title, file_title):
         data_label.append(name)
         print("{}\tmean calc. time:\t{} s [{} FPS]".format(name, mean, (1 / mean).round(3)))
         output.append([name, mean, (1 / mean).round(3)])
-    ev.line_plot(np.arange(0, max_len), data_list, data_label, title, "# simulation steps",
-                 "execution time [s]", os.path.join(dest, "{}.png".format(file_title)))
+    # ev.line_plot(np.arange(0, max_len), data_list, data_label, title, "# simulation steps",
+    #              "execution time [s]", os.path.join(dest, "{}.png".format(file_title)))
+
+    vis = ev.VisEval()
+    vis.set_x_data([np.arange(0, max_len)])
+    vis.set_y_data(data_list)
+    vis.set_data_labels(data_label)
+    vis.set_x_label("simulation step")
+    vis.set_y_label("execution time [s]")
+    vis.to_file(dest, file_title)
+    vis.set_legend_location('upper left')
+    vis.set_xlim([0, max_len])
+    vis.set_legend_frame(True)
+    if len(data_list) > 3:
+        vis.set_legend_col(3)
+        vis.set_legend_location('upper right')
+    vis.line_plot()
+
     with open(os.path.join(dest, "{}.csv".format(file_title)), 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(["Sensor", "Mean Ex Time", "Mean FPS"])

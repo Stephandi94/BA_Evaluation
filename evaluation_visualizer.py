@@ -439,6 +439,10 @@ class VisEval:
         plt.legend(loc=self.legend_location, ncol=self.legend_col, frameon=self.legend_frame, fontsize=self.fontsize)
         plt.xticks(fontsize=self.labelsize)
         plt.yticks(fontsize=self.labelsize)
+        if self.xlim is not None:
+            plt.xlim(self.xlim)
+        if self.ylim is not None:
+            plt.ylim(self.ylim)
         if self.x_tick_label is not None:
             plt.xticks(self.x_data[0], self.x_tick_label, fontsize=self.labelsize)
         if self.file_destination is None:
@@ -539,6 +543,7 @@ class VisEval:
             plt.show()
         else:
             plt.savefig(self.file_destination, dpi=self.dpi, bbox_inches='tight')
+
 
     def stat_sequence_plot(self):
         # data is [ (n, 3) np.array, (n, 3) np.array]

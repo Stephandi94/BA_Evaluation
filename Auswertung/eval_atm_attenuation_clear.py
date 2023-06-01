@@ -23,25 +23,47 @@ def main():
     ev.stats_1x3_to_csv(distance_dev, os.path.join(r"Weather_Clear/distance_deviation"))
     ev.stats_1x3_to_csv(intensity_dev, os.path.join(r"Weather_Clear/intensity_deviation"))
 
-    ev.plot_histogram_comparison(
-        [vlp16_gt[:, 3], vlp16_atm[:, 3]],
-        True,
-        "",
-        ["w/o attenuation", "w attenuation"],
-        "intensity",
-        [100, 0, 1],
-        os.path.join("Weather_Clear/clear_weather_intensity_attenuation")
-    )
+    # ev.plot_histogram_comparison(
+    #     [vlp16_gt[:, 3], vlp16_atm[:, 3]],
+    #     True,
+    #     "",
+    #     ["w/o attenuation", "w attenuation"],
+    #     "intensity",
+    #     [100, 0, 1],
+    #     os.path.join("Weather_Clear/clear_weather_intensity_attenuation")
+    # )
 
-    ev.plot_histogram_comparison(
-        [gt_distances, atm_distances],
-        True,
-        "",
-        ["w/o attenuation", "w attenuation"],
-        "distance [m]",
-        [100, 0, 100],
-        os.path.join("Weather_Clear/clear_weather_distance_attenuation")
-    )
+    vis_int = ev.VisEval()
+    vis_int.set_y_data([vlp16_gt[:, 3], vlp16_atm[:, 3]])
+    vis_int.set_data_labels(["w/o attenuation", "w attenuation"])
+    vis_int.set_x_label("intensity")
+    vis_int.set_y_label("frequency")
+    vis_int.set_xlim([0, 1.05])
+    vis_int.set_legend_location('upper left')
+    vis_int.to_file(os.path.join("Weather_Clear"), r"clear_weather_intensity_attenuation")
+    vis_int.define_bins(100, 0, 1)
+    vis_int.histogram_comparison()
+
+    # ev.plot_histogram_comparison(
+    #     [gt_distances, atm_distances],
+    #     True,
+    #     "",
+    #     ["w/o attenuation", "w attenuation"],
+    #     "distance [m]",
+    #     [100, 0, 100],
+    #     os.path.join("Weather_Clear/clear_weather_distance_attenuation")
+    # )
+
+    vis_dis = ev.VisEval()
+    vis_dis.set_y_data([gt_distances, atm_distances])
+    vis_dis.set_data_labels(["w/o attenuation", "w attenuation"])
+    vis_dis.set_x_label("distance [m]")
+    vis_dis.set_y_label("frequency")
+    vis_dis.set_xlim([0, 102])
+    vis_dis.set_legend_location('upper right')
+    vis_dis.to_file(os.path.join("Weather_Clear"), r"clear_weather_distance_attenuation")
+    vis_dis.define_bins(100, 0, 100)
+    vis_dis.histogram_comparison()
 
 if __name__=='__main__':
     main()

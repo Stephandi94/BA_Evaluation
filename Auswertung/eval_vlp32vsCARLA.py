@@ -65,31 +65,57 @@ def main():
 
     # plots
     # noise deviation in carla
-    ev.plot_stats(
-        carla_noise_distances,
-        np.arange(0, carla_noise_distances.shape[0]),
-        ["mean", "min", "max"],
-        "Detection Distance CARLA LiDAR with Noise Compared to GT",
-        "frame number",
-        "distance [m]",
-        os.path.join(cwd, r"VLP32vsCARLA/carla_distance"),
-        True,
-        et.get_distance_info(et.pcl_to_numpy(src_carla_no_noise))
-    )
+    # ev.plot_stats(
+    #     carla_noise_distances,
+    #     np.arange(0, carla_noise_distances.shape[0]),
+    #     ["mean", "min", "max"],
+    #     "Detection Distance CARLA LiDAR with Noise Compared to GT",
+    #     "frame number",
+    #     "distance [m]",
+    #     os.path.join(cwd, r"VLP32vsCARLA/carla_distance"),
+    #     True,
+    #     et.get_distance_info(et.pcl_to_numpy(src_carla_no_noise))
+    # )
+
+    vis = ev.VisEval()
+    vis.set_x_data(np.arange(0, carla_noise_distances.shape[0]))
+    vis.set_y_data([carla_noise_distances])
+    vis.set_data_labels(["mean", "min", "max"])
+    vis.set_x_label("frame number")
+    vis.set_y_label("distance [m]")
+    vis.set_xlim([-0.1, carla_noise_distances.shape[0] - 0.9])
+    vis.set_marker('.')
+    vis.set_legend_location('center right')
+    vis.set_legend_frame(True)
+    vis.to_file(os.path.join(cwd, r"VLP32vsCARLA"), "carla_distance")
+    vis.plot_stats()
 
     # plots
     # noise deviation in vlp32
-    ev.plot_stats(
-        vlp32_noise_distances,
-        np.arange(0, vlp32_noise_distances.shape[0]),
-        ["mean", "min", "max"],
-        "Detection Distance VLP32 LiDAR with Noise Compared to GT",
-        "frame number",
-        "distance [m]",
-        os.path.join(cwd, r"VLP32vsCARLA/vlp32_distance"),
-        True,
-        et.get_distance_info(et.pcl_to_numpy(src_vlp32_no_noise))
-    )
+    # ev.plot_stats(
+    #     vlp32_noise_distances,
+    #     np.arange(0, vlp32_noise_distances.shape[0]),
+    #     ["mean", "min", "max"],
+    #     "Detection Distance VLP32 LiDAR with Noise Compared to GT",
+    #     "frame number",
+    #     "distance [m]",
+    #     os.path.join(cwd, r"VLP32vsCARLA/vlp32_distance"),
+    #     True,
+    #     et.get_distance_info(et.pcl_to_numpy(src_vlp32_no_noise))
+    # )
+
+    vis = ev.VisEval()
+    vis.set_x_data(np.arange(0, vlp32_noise_distances.shape[0]))
+    vis.set_y_data([vlp32_noise_distances])
+    vis.set_data_labels(["mean", "min", "max"])
+    vis.set_x_label("frame number")
+    vis.set_y_label("distance [m]")
+    vis.set_xlim([-0.1, vlp32_noise_distances.shape[0] - 0.9])
+    vis.set_marker('.')
+    vis.set_legend_location('center right')
+    vis.set_legend_frame(True)
+    vis.to_file(os.path.join(cwd, r"VLP32vsCARLA"), "vlp32_distance")
+    vis.plot_stats()
 
 
 

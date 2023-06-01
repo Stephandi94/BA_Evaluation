@@ -12,7 +12,7 @@ def main():
     dest_path = os.path.join(r"Weather_Fog/{}".format(2001)) # TODO ANPASSEN
 
     src_vlp16_fog = os.path.join(r"../Datasets/CARLA/5.4/5.4.3/{}".format(sub_dir))
-    src_vlp16_gt = os.path.join(r"../Datasets/CARLA/5.4/5.4.1/0/09-34-11.865230.bin")
+    src_vlp16_gt = os.path.join(r"../Datasets/CARLA/5.4/5.4.3/40001/10-17-00.211242.bin")
 
     vlp16_fog = et.DatasetEvaluation(src_vlp16_fog)
     vlp16_fog.set_gt(src_vlp16_gt)
@@ -59,6 +59,7 @@ def main():
     intensity_vis.define_bins(100, 0, 1)
     intensity_vis.set_legend_location('upper left')
     intensity_vis.to_file(dest_path, "fog_intensities")
+    intensity_vis.set_xlim([0, 1.05])
     intensity_vis.histogram_comparison()
 
     # plot augmentation
@@ -72,6 +73,7 @@ def main():
         (np.max(augmentation_stats_per_pcl[:, 2]) + 0.25) * -1,
         np.max(augmentation_stats_per_pcl[:, 1]) + 0.5, 0.25
     ))
+    aug_vis.set_legend_col(2)
     aug_vis.to_file(dest_path, "fog_augmenatation")
     aug_vis.bar_plot(True, True)
 
@@ -110,6 +112,7 @@ def main():
     phys_int.define_bins(100, 0, 1)
     phys_int.set_legend_location('upper left')
     phys_int.to_file(dest_path, "phys_fog_intensities")
+    phys_int.set_xlim([0, 1.05])
     phys_int.histogram_comparison()
 
     # plot physical distances
@@ -119,8 +122,9 @@ def main():
     phys_int.set_y_label("frequency")
     phys_int.set_data_labels(["fog poor visibility [~3000 m]", "no fog"])  # TODO REGENRATE ANPASSEN
     phys_int.define_bins(int(np.max(phys_distance_gt)), 0, int(np.max(phys_distance_gt)))
-    phys_int.set_legend_location('upper left')
+    phys_int.set_legend_location('upper right')
     phys_int.to_file(dest_path, "phys_fog_distances")
+    phys_int.set_xlim([0, 102])
     phys_int.histogram_comparison()
 
 if __name__=='__main__':
