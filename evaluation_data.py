@@ -14,7 +14,7 @@ def nd_array_to_csv(data, path, filename, header=None, row_description=None):
     :param row_description: list of row description strings, has to fit data.shape[0]; default None
     :return:
     """
-    dest = os.path.join(path, r"{}.csv".format(filename))
+    dest = os.path.join(path, "{}.csv".format(filename))
     add_row_description = False
     if row_description is not None:
         if len(row_description) != data.shape[0]:

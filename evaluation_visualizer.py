@@ -3,6 +3,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 import os
 import csv
+from matplotlib import rc
 
 default_colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2',
  '#7f7f7f', '#bcbd22', '#17becf']
@@ -562,6 +563,27 @@ class VisEval:
         plt.legend(loc=self.legend_location, frameon=self.legend_frame, fontsize=self.fontsize)
         if self.x_tick_label is not None:
             plt.xticks(self.x_data[0], self.x_tick_label, fontsize=self.labelsize)
+        if self.file_destination is None:
+            plt.show()
+        else:
+            plt.savefig(self.file_destination, dpi=self.dpi, bbox_inches='tight')
+
+    def violin_plot(self):
+        data_labels = self.data_labels
+        data_labels.insert(0, '')
+        plt.figure(figsize=self.fig_size)
+        plt.violinplot(self.y_data, showmeans=True)
+        plt.xlabel(self.x_label, fontsize=self.fontsize)
+        plt.ylabel(self.y_label, fontsize=self.fontsize)
+        plt.xticks(fontsize=self.labelsize)
+        plt.yticks(fontsize=self.labelsize)
+        plt.xticks(np.arange(len(self.y_data) + 1), self.data_labels, fontsize=self.labelsize)
+        plt.xlim([0.5, len(data_labels)-0.5])
+        max_lim = 0
+        for d in self.y_data:
+            if np.max(d) > max_lim:
+                max_lim = np.max(d)
+        plt.ylim([0, max_lim + (max_lim * 0.1)])
         if self.file_destination is None:
             plt.show()
         else:
