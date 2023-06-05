@@ -4,6 +4,8 @@ import numpy as np
 
 import evaluation_tools as et
 import evaluation_visualizer as ev
+import evaluation_data as ed
+from matplotlib import pyplot as plt
 
 
 def stats_to_csv(points, distances, intensities, title):
@@ -93,5 +95,61 @@ def main():
     vis.set_ylim([0, np.max(vlp32_num_points) + 1000])
     vis.line_plot()
 
+
+def det_plot():
+    carla_src = os.path.join(r"Determinism/determinism_carla.csv")
+    vlp16_src = os.path.join(r"Determinism/determinism_vlp16.csv")
+    vlp32_src = os.path.join(r"Determinism/determinism_vlp32.csv")
+    dest = os.path.join(r"Determinism")
+
+    carla = ed.read_csv_to_array(carla_src, True, True)
+    vlp16 = ed.read_csv_to_array(vlp16_src, True, True)
+    vlp32 = ed.read_csv_to_array(vlp32_src, True, True)
+
+    y_data = [carla, vlp16, vlp32]
+    x_data = np.arange(120)
+    label = ["CARLA LiDAR", "VLP16", "VLP32"]
+    colors = ['crimson', 'cornflowerblue', 'royalblue']
+
+
+
+    for i, d in enumerate(y_data):
+        fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 5))
+        # distances
+        ax1.plot(x_data, np.ones_like(x_data) * d[1, 0], label="mean", linestyle='-', color=colors[0], marker='none')
+        ax1.plot(x_data, np.ones_like(x_data) * d[2, 1], label="min", linestyle='--', color=colors[1], marker='none')
+        ax1.plot(x_data, np.ones_like(x_data) * d[3, 2], label="max", linestyle='--', color=colors[2], marker='none')
+        ax1.set_xlabel("frame", fontsize=14)
+        ax1.set_ylabel("distance [m]", fontsize=14)
+        ax1.tick_params(labelsize=12)
+        ax1.set_xlim([0, 120])
+        ax1.set_ylim([0, 103])
+        ax1.legend(loc='best', frameon=False, fontsize=14)
+
+        # intensities
+        ax2.plot(x_data, np.ones_like(x_data) * d[4, 0], label="mean", linestyle='-', color=colors[0], marker='none')
+        ax2.plot(x_data, np.ones_like(x_data) * d[5, 1], label="min", linestyle='--', color=colors[1], marker='none')
+        ax2.plot(x_data, np.ones_like(x_data) * d[6, 2], label="max", linestyle='--', color=colors[2], marker='none')
+        ax2.set_xlabel("frame", fontsize=14)
+        ax2.set_ylabel("intensity", fontsize=14)
+        ax2.tick_params(labelsize=12)
+        ax2.set_xlim([0, 120])
+        ax2.set_ylim([0, 1.03])
+        ax2.legend(loc='best', frameon=False, fontsize=14)
+
+        # points
+        ax3.plot(x_data, np.ones_like(x_data) * d[0, 0], label="", linestyle='-', color=colors[0], marker='none')
+        ax3.set_xlabel("frame", fontsize=14)
+        ax3.set_ylabel("# detected points", fontsize=14)
+        ax3.tick_params(labelsize=12)
+        ax3.set_xlim([0, 120])
+        ax3.set_ylim([0, 55500])
+        #ax3.legend(loc='best', frameon=False, fontsize=14)
+
+        plt.tight_layout()
+        plt.savefig(os.path.join(dest, "eval_{}_determinism.png".format(label[i])), dpi=600, bbox_inches='tight')
+
+
 if __name__ == '__main__':
-    main()
+    #main()
+    det_plot()

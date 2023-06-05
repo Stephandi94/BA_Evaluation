@@ -34,34 +34,34 @@ def kitti_stats():
 def formula(i, t):
     mp = 10 * np.log10(3444 * 9)
     ep = mp - 10 * np.log10(9)
-    return (i * ep - t) / (mp - t)
+    return (i * mp - t) / (mp - t)
 
 def fzd_intensity_spectra():
     dest = os.path.join(r"ReflectionDatabase")
     #x_data = np.linspace(0, 1, 0.1)
-    data = np.zeros((4, 2)) #vlp16, vlp32, vlp16 wo, vlp32 wo
-    data_labels = ["VLP16", "VLP32", "VLP16 w/o thresh", "VLP32 w/o thresh"]
+    data = np.zeros((3, 2)) #vlp16, vlp32, vlp16 wo, vlp32 wo
+    data_labels = ["VLP16", "VLP32", "VLP16 & VLP32 w/o thresh"]
 
     for i in range(2):
         data[0, i] = formula(i, -48.8)
         data[1, i] = formula(i, -70.0)
         data[2, i] = formula(i, 0)
-        data[3, i] = formula(i, 0)
-    ed.nd_array_to_csv(data, dest, "min_max_intensities", ["0", "1"], data_labels)
+    #ed.nd_array_to_csv(data, dest, "min_max_intensities", ["0", "1"], data_labels)
 
     vis = ev.VisEval()
-    vis.set_y_data([data[0, :], data[1, :], data[2, :], data[3, :]])
+    vis.set_y_data([data[0, :], data[1, :], data[2, :]])
     vis.set_x_data([np.array([0, 1])])
-    vis.set_x_label(r"$\rho \cdot \cos(\theta)$")
+    vis.set_x_label(r"$P_0 \cdot \rho \cdot \cos(\theta)$")
     vis.set_y_label("intensity")
     vis.set_data_labels(data_labels)
     vis.set_xlim([0, 1])
     vis.set_ylim([0, 1.1])
     vis.set_legend_location('lower right')
+    vis.set_colors(['#1f77b4', '#ff7f0e', '#d62728'])
     vis.to_file(dest, "intensities_w_and_wo_threshold")
     vis.line_plot()
 
 if __name__=='__main__':
     #comparison_carla_vlp32()
-    kitti_stats()
+    #kitti_stats()
     fzd_intensity_spectra()

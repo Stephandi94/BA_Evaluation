@@ -456,8 +456,8 @@ class VisEval:
 
         # plot augmented data
         y_data = self.y_data[0]
-        ax1.plot(self.x_data[0], y_data[:, 0], label=self.data_labels[0], color=self.colors[0], marker='o', linestyle=self.linestyle[0])
-        ax1.plot(self.x_data[0], y_data[:, 1], label=self.data_labels[1], color=self.colors[1], marker='o', linestyle=self.linestyle[1])
+        ax1.plot(self.x_data[0], y_data[:, 0], label=self.data_labels[0], color=self.colors[0], marker=self.marker, linestyle=self.linestyle[0])
+        ax1.plot(self.x_data[0], y_data[:, 1], label=self.data_labels[1], color=self.colors[1], marker=self.marker, linestyle=self.linestyle[1])
         ax1.set_xlabel(self.x_label, fontsize=self.fontsize)
         ax1.set_ylabel(self.y_label[0], fontsize=self.fontsize)
         ax1.legend(loc=self.legend_location[0], frameon=self.legend_frame, fontsize=self.fontsize)
@@ -467,16 +467,18 @@ class VisEval:
 
         y_data = self.y_data[1]
         ax2 = ax1.twinx()
-        ax2.plot(self.x_data[0], y_data[:, 0], label=self.data_labels[2], color=self.colors[2], marker='o',
+        ax2.plot(self.x_data[0], y_data[:, 0], label=self.data_labels[2], color=self.colors[2], marker=self.marker,
                  linestyle=self.linestyle[2], alpha=0.7)
-        ax2.plot(self.x_data[0], y_data[:, 1], label=self.data_labels[3], color=self.colors[3], marker='o',
+        ax2.plot(self.x_data[0], y_data[:, 1], label=self.data_labels[3], color=self.colors[3], marker=self.marker,
                  linestyle=self.linestyle[3], alpha=0.7)
         ax2.set_ylabel(self.y_label[1], fontsize=self.fontsize)
         ax2.legend(loc=self.legend_location[1], frameon=self.legend_frame, fontsize=self.fontsize)
         ax2.tick_params(labelsize=self.labelsize)
         if self.ylim is not None:
             ax2.set_ylim(self.ylim[1])
-
+        if self.xlim is not None:
+            ax1.set_xlim(self.xlim)
+            ax2.set_xlim(self.xlim)
         if self.x_tick_label is not None:
             plt.xticks(self.x_data[0], self.x_tick_label, fontsize=self.labelsize)
         if self.file_destination is None:
@@ -584,6 +586,25 @@ class VisEval:
             if np.max(d) > max_lim:
                 max_lim = np.max(d)
         plt.ylim([0, max_lim + (max_lim * 0.1)])
+        if self.file_destination is None:
+            plt.show()
+        else:
+            plt.savefig(self.file_destination, dpi=self.dpi, bbox_inches='tight')
+
+    def scatter_plot(self, add_atm=False):
+        plt.figure(figsize=self.fig_size)
+        plt.scatter(self.x_data[0], self.y_data[0], s=1)
+        if add_atm and len(self.x_data) > 1 and len(self.y_data) > 1:
+            plt.plot(self.x_data[1], self.y_data[1], label=self.data_labels[0], color=default_colors[1], linestyle=self.linestyle, marker=self.marker)
+            plt.legend(loc=self.legend_location, frameon=self.legend_frame, fontsize=self.fontsize)
+        plt.xlabel(self.x_label, fontsize=self.fontsize)
+        plt.ylabel(self.y_label, fontsize=self.fontsize)
+        plt.xticks(fontsize=self.labelsize)
+        plt.yticks(fontsize=self.labelsize)
+        if self.xlim is not None:
+            plt.xlim(self.xlim)
+        if self.ylim is not None:
+            plt.ylim(self.ylim)
         if self.file_destination is None:
             plt.show()
         else:
